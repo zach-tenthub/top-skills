@@ -8,7 +8,7 @@ Claude Code skills for Tent of Presence engineers — built for consistency acro
 
 Every developer on the team follows the same branching strategy, commit format, PR checklist, and incident response process. These skills encode those rules directly into Claude Code so the right guidance is always one natural-language prompt away — no need to re-read the working guide before every PR or branch.
 
-**Primary reference:** All skills are derived from `docs/working-guide.md` in the `engineering` repository. When the working guide is updated, the relevant skills in this repo should be updated to match.
+**Primary reference:** All skills are derived from [`docs/working-guide.md`](https://github.com/TentOfPresence/engineering/blob/master/docs/working-guide.md) in the `engineering` repository. When the working guide is updated, the relevant skills in this repo should be updated to match.
 
 ---
 
@@ -30,7 +30,15 @@ Every developer on the team follows the same branching strategy, commit format, 
 
 Skills work at **project level** — they live inside `.claude/skills/` in a repository and are only active when Claude Code is opened from that project directory.
 
-### One-time setup per project
+### One-time machine setup
+
+Clone `top-skills` once to a permanent location in your home directory. This makes it reusable across all projects on your machine and updatable with a single `git pull`.
+
+```bash
+git clone git@github.com:zach-tenthub/top-skills.git ~/.top-skills
+```
+
+### Per-project setup
 
 Run this from your project root:
 
@@ -38,11 +46,11 @@ Run this from your project root:
 # Create the skills directory if it doesn't exist
 mkdir -p .claude/skills
 
-# Clone top-skills into a temp location
-git clone git@github.com:zach-tenthub/top-skills.git /tmp/top-skills
+# Copy all 7 skills from your local clone
+cp -r ~/.top-skills/top-* .claude/skills/
 
-# Copy all 7 skills into the project
-cp -r /tmp/top-skills/top-* .claude/skills/
+# Verify all 7 folders are present before committing
+ls .claude/skills/
 
 # Commit so every team member gets them automatically on clone
 git add .claude/skills/
@@ -54,7 +62,13 @@ Committing `.claude/skills/` into the repo means every developer who clones the 
 
 ### Verify the skills are loaded
 
-Open Claude Code in the project directory and run:
+Open Claude Code from the project root:
+
+```bash
+claude .
+```
+
+Then run the skills command inside Claude Code:
 
 ```
 /skills
@@ -84,16 +98,16 @@ You don't need to type the skill name — Claude Code reads each skill's descrip
 
 ## Keeping Skills Up to Date
 
-When the working guide changes, update the affected skills and push here. Then pull into each project:
+When the working guide changes, update the affected skills and push here. Then sync each project:
 
 ```bash
-# Pull latest from top-skills
-git clone git@github.com:zach-tenthub/top-skills.git /tmp/top-skills
+# 1. Pull the latest skills to your local clone
+cd ~/.top-skills && git pull
 
-# Overwrite skills in your project
-cp -r /tmp/top-skills/top-* .claude/skills/
+# 2. In your project root, overwrite with the latest
+cp -r ~/.top-skills/top-* .claude/skills/
 
-# Commit the update
+# 3. Commit the update
 git add .claude/skills/
 git commit -m "chore: update top-skills to latest"
 git push
